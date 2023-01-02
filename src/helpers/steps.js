@@ -46,7 +46,7 @@ export const converArrayIps = (ipBaseString, subredes, saltoRed) => {
   const ipBase = ipBaseArray[0] + "." + ipBaseArray[1] + "." + ipBaseArray[2];
 
   for (let i = 1; i < subredes + 1; i++) {
-    let ob = {
+    const ob = {
       num: i,
       ip_subred: ipBase + "." + ipModified,
       ip_util: ipBase + "." + (ipModified + 1),

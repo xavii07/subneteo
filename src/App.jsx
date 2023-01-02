@@ -1,30 +1,25 @@
-import { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
-import CardData from "./components/CardData";
-import Formulario from "./components/Formulario";
-import TableComponent from "./components/TableComponent";
-import "./styles.css";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Footer from "./components/Footer";
+import NavbarC from "./components/Navbar";
+import Home from "./pages/Home";
+import LastSearchs from "./pages/LastSearchs";
 
-function App() {
-  const [iptable, setIpTable] = useState([]);
-  const [datacard, setDataCard] = useState({});
-
+const App = () => {
   return (
-    <div className="App w-100 min-vh-100 pb-4">
-      <Container>
-        <h3 className="text-white text-center p-3">Subneteo de IPs</h3>
-        <Formulario setIpTable={setIpTable} setDataCard={setDataCard} />
-        {iptable && iptable.length > 0 && (
-          <>
-            <h5 className="text-white text-center p-3">Informacion de IP</h5>
-            <CardData datacard={datacard} />
-            <h5 className="text-white text-center p-3">Tabla de Subneteo</h5>
-            <TableComponent iptable={iptable} />
-          </>
-        )}
-      </Container>
+    <div className="App w-100 ">
+      <BrowserRouter>
+        <NavbarC />
+        <div className="contenedor">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/ultimos" element={<LastSearchs />} />
+            <Route path="*" element={<h1>404</h1>} />
+          </Routes>
+        </div>
+        <Footer />
+      </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;

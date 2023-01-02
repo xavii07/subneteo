@@ -14,9 +14,18 @@ tr {
     background-color: #242424;
 }
 
+.contenedor {
+    min-height: calc(100vh - 110px);
+}
+
+
 @media screen and (min-width: 768px) {
     body {
         font-size: 16px !important;
+    }
+
+    .contenedor {
+        min-height: calc(100vh - 128px);
     }
 
 }

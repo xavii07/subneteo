@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { ContextSearch } from "../context/contextSearch";
 import {
   converArrayIps,
   getBitsOn,
@@ -11,15 +12,19 @@ import {
   getNumHosts,
   getNumJumpRed,
 } from "../helpers/steps";
+import { validateIp } from "../helpers/validarIp";
+import { TypesLastSearch } from "../types/types";
 import Alert from "./Alert";
 
+const initialState = {
+  ip: "",
+  mascara: "",
+  subredes: "",
+};
 const Formulario = ({ setIpTable, setDataCard }) => {
-  const [dataip, setDataIp] = useState({
-    ip: "",
-    mascara: "",
-    subredes: "",
-  });
+  const [dataip, setDataIp] = useState(initialState);
   const [showalert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState("");
 
   const { ip, mascara, subredes } = dataip;
 
@@ -30,9 +35,29 @@ const Formulario = ({ setIpTable, setDataCard }) => {
     });
   };
 
-  const handleGetSubredes = () => {
+  const { _, dispatch } = useContext(ContextSearch);
+  const addLastSearch = (newSearch) => {
+    newSearch.id = Date.now();
+    dispatch({
+      type: TypesLastSearch.SET_LAST_SEARCH,
+      payload: newSearch,
+    });
+  };
+
+  const handleGetSubredes = (e) => {
+    e.preventDefault();
+
+    const isIpValidate = validateIp(ip);
+    console.log(isIpValidate);
+
+    if (!isIpValidate) {
+      setShowAlert(true);
+      setMessage("La IP no es valida");
+      return;
+    }
     if (ip === "" || mascara === "" || subredes === "") {
       setShowAlert(true);
+      setMessage("Completa todos los campos");
       return;
     }
 
@@ -52,12 +77,28 @@ const Formulario = ({ setIpTable, setDataCard }) => {
       numJumpRed,
       bitsOn,
     });
+    setDataIp(initialState);
+    addLastSearch({
+      maskString,
+      ip: ip + "/" + mascara,
+      newMask,
+      numHosts,
+      numJumpRed,
+      bitsOn,
+    });
   };
 
   return (
     <>
-      <Alert setShowAlert={setShowAlert} showalert={showalert} />
-      <Row className="mx-auto">
+      {showalert && (
+        <Alert
+          setShowAlert={setShowAlert}
+          setMessage={setMessage}
+          showalert={showalert}
+          message={message}
+        />
+      )}
+      <Row as="form" className="mx-auto" onSubmit={handleGetSubredes}>
         <Col xs={8} lg={4}>
           <InputGroup className="mb-3">
             <InputGroup.Text id="basic-addon1" style={{ fontSize: "14px" }}>
@@ -106,12 +147,7 @@ const Formulario = ({ setIpTable, setDataCard }) => {
           </InputGroup>
         </Col>
         <Col xs={5} lg={2}>
-          <Button
-            type="submit"
-            onClick={handleGetSubredes}
-            className="w-100"
-            style={{ fontSize: "14px" }}
-          >
+          <Button type="submit" className="w-100" style={{ fontSize: "14px" }}>
             Calcular
           </Button>
         </Col>

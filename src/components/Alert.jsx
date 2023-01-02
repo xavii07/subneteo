@@ -1,13 +1,15 @@
-import React from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 
-const Alert = ({ showalert, setShowAlert }) => {
+const Alert = ({ showalert, setShowAlert, message, setMessage }) => {
   return (
     <ToastContainer position="top-center" className="pt-2">
       <Toast
-        onClose={() => setShowAlert(false)}
+        onClose={() => {
+          setShowAlert(false);
+          setMessage("");
+        }}
         show={showalert}
-        delay={2000}
+        delay={1000}
         autohide
         animation
         bg="danger"
@@ -24,7 +26,7 @@ const Alert = ({ showalert, setShowAlert }) => {
             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
           </svg>
-          Completa todos los campos
+          {message}
         </Toast.Body>
       </Toast>
     </ToastContainer>
